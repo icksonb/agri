@@ -11,20 +11,18 @@
 
 int main(void)
 {
-	Serial serial(9600);
+	Serial_Init(9600);
 
 	DDRB |= (1<<PB5);
 
 	_delay_ms(1000);
-	serial.writeFlush(0x01);
-
 	while(1)
 	{
-		if(serial.read() == 0x01)
+		if(Serial_read() == 0x01)
 		{
 			PORTB ^= (1<<PB5);
 			_delay_ms(1000);
-			serial.writeFlush(0x01);
+			Serial_writeFlush(0x01);
 			_delay_ms(10);
 		}
 	}
