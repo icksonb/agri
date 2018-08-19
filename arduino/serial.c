@@ -1,9 +1,6 @@
 #include <avr/io.h>
 #include "serial.h"
-
-#ifndef F_CPU
-#define F_CPU 16000000UL // Frequencia de 16MHz
-#endif
+#include "timers.h"
 
 void Serial_Init(unsigned int baud)
 {
@@ -25,10 +22,14 @@ void Serial_write(unsigned char data)
 void Serial_writeFlush(unsigned char data)
 {
 	while ( !( UCSR0A & (1<<UDRE0)) );
-	UDR0 = data;	
-	while( (!(UCSR0A & (1<<RXC0))));
-	char c = 0;
-	c = UDR0;
+	UDR0 = data;
+	delay_ms(5); //Aguarda os bits
+	if(!(!(UCSR0A & (1<<RXC0)))) //Verifica se tudo ocorreu normalmente
+	{
+	//while(!(UCSR0A & (1<<RXC0)));
+		char c = 0;
+		c = UDR0;	
+	}
 }
 
 unsigned char Serial_read(void)
