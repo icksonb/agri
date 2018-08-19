@@ -7,13 +7,19 @@ COMPILAR = avr-g++ -g -Os -mmcu=atmega328p -c
 
 all: clean compilar comp hex gravar
 
-compilar: clean serial comp hex
+compilar: clean serial timers adc comp hex
 
 serial:
-	$(COMPILAR) serial.cpp
+	$(COMPILAR) serial.c
+
+timers:
+	$(COMPILAR) timers.c
+
+adc:
+	$(COMPILAR) adc.c
 
 comp:
-	$(COMPILAR) main.cpp && avr-g++ -g -mmcu=atmega328p -o main.elf serial.o main.o
+	$(COMPILAR) main.c && avr-g++ -g -mmcu=atmega328p -o main.elf serial.o timers.o adc.o main.o
 
 hex:
 	avr-objcopy -j .text -j .data -O ihex main.elf main.hex
