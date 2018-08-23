@@ -3,23 +3,32 @@
 # TCC - AGRICULTURA
 #################################################################
 
-COMPILAR = avr-g++ -g -Os -mmcu=atmega328p -c 
+COMPILAR = avr-g++ -g -O3 -mmcu=atmega328p -c 
+
+cleanObj:
+	rm -rf *.o
 
 all: clean compilar comp hex gravar
 
-compilar: clean serial timers adc comp hex
+compilar: clean serial timers adc spi comp hex cleanObj
 
 serial:
-	$(COMPILAR) serial.c
+	$(COMPILAR) lib/serial.c
 
 timers:
-	$(COMPILAR) timers.c
+	$(COMPILAR) lib/timers.c
 
 adc:
-	$(COMPILAR) adc.c
+	$(COMPILAR) lib/adc.c
+
+spi:
+	$(COMPILAR) lib/spi.c
+
+eeprom:
+	$(COMPILAR) lib/eeprom.c
 
 comp:
-	$(COMPILAR) main.c && avr-g++ -g -mmcu=atmega328p -o main.elf serial.o timers.o adc.o main.o
+	$(COMPILAR) main.c && avr-g++ -g -mmcu=atmega328p -o main.elf *.o sdcard/avr_mmcp.o
 
 hex:
 	avr-objcopy -j .text -j .data -O ihex main.elf main.hex
@@ -32,3 +41,4 @@ cleanpart:
 
 clean:
 	rm -rf *.o *.elf *.hex
+
