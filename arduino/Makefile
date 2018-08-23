@@ -10,7 +10,7 @@ cleanObj:
 
 all: clean compilar comp hex gravar
 
-compilar: clean serial timers adc spi comp hex cleanObj
+compilar: clean serial timers adc spi avr_mmcp comp hex cleanObj
 
 serial:
 	$(COMPILAR) lib/serial.c
@@ -27,8 +27,11 @@ spi:
 eeprom:
 	$(COMPILAR) lib/eeprom.c
 
+avr_mmcp:
+	$(COMPILAR) lib/avr_mmcp.c
+
 comp:
-	$(COMPILAR) main.c && avr-g++ -g -mmcu=atmega328p -o main.elf *.o sdcard/avr_mmcp.o
+	$(COMPILAR) main.c && avr-g++ -g -mmcu=atmega328p -o main.elf *.o
 
 hex:
 	avr-objcopy -j .text -j .data -O ihex main.elf main.hex
