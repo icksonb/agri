@@ -10,7 +10,7 @@ cleanObj:
 
 all: clean compilar comp hex gravar
 
-compilar: clean serial timers adc spi avr_mmcp comp hex cleanObj
+compilar: clean serial timers adc spi avr_mmcp i2c ds1307 comp hex cleanObj
 
 serial:
 	$(COMPILAR) lib/serial.c
@@ -29,6 +29,12 @@ eeprom:
 
 avr_mmcp:
 	$(COMPILAR) lib/avr_mmcp.c
+
+i2c:
+	$(COMPILAR) lib/i2c.c
+
+ds1307:
+	$(COMPILAR) lib/ds1307.c
 
 comp:
 	$(COMPILAR) main.c && avr-g++ -g -mmcu=atmega328p -o main.elf *.o

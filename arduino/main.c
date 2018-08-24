@@ -8,8 +8,9 @@
 #include "lib/serial.h"
 #include "lib/timers.h"
 #include "lib/adc.h"
-#include "lib/spi.h"
-#include "sdcard/diskio.h"
+//#include "lib/spi.h"
+#include "lib/ds1307.h"
+#include "lib/diskio.h"
 
 
 char ENDERECO_ESCRAVO = 0;
@@ -18,41 +19,34 @@ char ENDERECO_ESCRAVO = 0;
 int main(void)
 {
 
-	uint8_t ram_buffer[SPM_PAGESIZE];
-	unsigned char c;
+	char buffer[50];
+	unsigned int i = 0;
 
 	Serial_Init(9600);
 
 	DDRB |= (1<<PB5);
 	delay_us(2000);
 	//Serial_writeFlush(0x01);
+
+	DS1307_init();
 	Serial_string("Iniciou...\r\n");
 
-	int i = 0;
-	char buffer[50];
+	sprintf(buffer, "%d\r\n", DS1307_getSeconds());
+	Serial_string(buffer);
+
+	for(i=0; i<128; i++)
+	{
+		delay_ms(1000);
+		sprintf(buffer, "%d\r\n", DS1307_getSeconds());
+		Serial_string(buffer);		
+	}
+
+	/*int i = 0;
 	BYTE values[128];
 	BYTE values2[128];
 
 	if(!disk_initialize())
 	{
-		//Serial_string("Dados da flash: \r\n");
-		disk_readp(values, (DWORD) 1, 0, 128);
-		for(i=0; i<128; i++)
-		{
-			sprintf(buffer, "%d\r\n", values[i]);
-			Serial_string(buffer);
-		}
-
-		for(i=0; i<128; i++)
-			values2[i] = i;
-
-		/*sprintf(buffer, "Escrita: %d\r\n", ));
-		Serial_string(buffer);
-
-		sprintf(buffer, "Escrita: %d\r\n", disk_readp(values, (DWORD) 1, 0, 128));
-		Serial_string(buffer);
-		*/
-		//Serial_string("Dados da flash: \r\n");
 		disk_writep(0, (DWORD) 1);
 		disk_writep(values2, (DWORD) 128);
 		disk_writep(0,0);
@@ -70,6 +64,7 @@ int main(void)
 		Serial_string("Erro ao iniciar disco...\r\n");
 	}
 	delay_ms(100); // wait for sending all text via serial
+	*/
 	
 
 	
