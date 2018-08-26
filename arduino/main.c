@@ -29,17 +29,18 @@ int main(void)
 	//Serial_writeFlush(0x01);
 
 	DS1307_init();
+	DS1307_set1Hz();
 	Serial_string("Iniciou...\r\n");
 
-	sprintf(buffer, "%d\r\n", DS1307_getSeconds());
+	sprintf(buffer, "Timestamp: %ld\r\n", DS1307_getTimestamp());
 	Serial_string(buffer);
 
-	for(i=0; i<128; i++)
+	/*for(i=0; i<128; i++)
 	{
 		delay_ms(1000);
 		sprintf(buffer, "%d\r\n", DS1307_getSeconds());
 		Serial_string(buffer);		
-	}
+	}*/
 
 	/*int i = 0;
 	BYTE values[128];
